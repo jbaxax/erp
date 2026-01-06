@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/store/useAuthStore';
+import * as authService from '../services/auth.service';
 
 // ============================================
 // QUERY KEYS - Centralización para mejor control de caché
@@ -17,11 +18,12 @@ export function useLogin() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      authService.login(email, password),
+    // Ahora usa el LoginPayload del servicio refactorizado
+    mutationFn: (payload: { email: string; password: string }) =>
+      authService.login(payload),
     
     onSuccess: (data) => {
-      // Guardar en Zustand store con la estructura correcta
+      // data ya viene desestructurado del service (data.user, data.token)
       loginStore(data.user, data.token);
 
       // Invalidar queries relacionadas para que se recarguen
