@@ -1,20 +1,55 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { useLogin } from '../hooks/useAuth';
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
+  // Hook de React Query para login
+  const loginMutation = useLogin();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Llamar la mutación
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          // Redirigir al dashboard tras login exitoso
+          router.push('/dashboard');
+        },
+        onError: (error: Error) => {
+          // El error ya se maneja en el UI abajo
+          console.error('Login failed:', error.message);
+        }
+      }
+    );
+  };
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form 
+      className={cn("flex flex-col gap-6", className)} 
+      onSubmit={handleSubmit}
+      {...props}
+    >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
@@ -22,10 +57,34 @@ export function LoginForm({
             Enter your email below to login to your account
           </p>
         </div>
+
+        {/* Mensaje de error */}
+        {loginMutation.isError && (
+          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm">
+            <strong>Error:</strong> {loginMutation.error.message}
+          </div>
+        )}
+
+        {/* Credenciales de prueba */}
+        <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-sm">
+          <p className="font-semibold mb-2">Credenciales de prueba:</p>
+          <p><strong>Admin:</strong> admin@erp.com / admin</p>
+          <p><strong>Vendedor:</strong> vendedor@erp.com / sales</p>
+        </div>
+
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Input 
+            id="email" 
+            type="email" 
+            placeholder="m@example.com" 
+            required 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loginMutation.isPending}
+          />
         </Field>
+
         <Field>
           <div className="flex items-center">
             <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -36,12 +95,37 @@ export function LoginForm({
               Forgot your password?
             </a>
           </div>
-          <Input id="password" type="password" required />
+          <Input 
+            id="password" 
+            type="password" 
+            required 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={loginMutation.isPending}
+          />
         </Field>
+
         <Field>
-          <Button type="submit">Login</Button>
+          <Button 
+            type="submit" 
+            disabled={loginMutation.isPending}
+            className="relative"
+          >
+            {loginMutation.isPending ? (
+              <>
+                <span className="opacity-0">Login</span>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              </>
+            ) : (
+              'Login'
+            )}
+          </Button>
         </Field>
+
         <FieldSeparator>Or continue with</FieldSeparator>
+
         <Field>
           <Button variant="outline" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -61,5 +145,5 @@ export function LoginForm({
         </Field>
       </FieldGroup>
     </form>
-  )
+  );
 }
