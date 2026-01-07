@@ -7,7 +7,12 @@ export async function login(payload: LoginPayload): Promise<{ user: User; token:
   try {
     const { data } = await api.post<LoginResponse>('/auth/login', payload);
 
-    Cookies.set('auth-token',data.data.token,{expires: 7,path: '/'});
+   Cookies.set('auth-token', data.data.token, {
+  expires: 7,
+  path: '/',
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict' // Protección CSRF
+});;
     return data.data;
   } catch (error) {
     handleApiError(error);

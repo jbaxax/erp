@@ -34,6 +34,6 @@ export const config = {
      * - _next/image (optimización de imágenes)
      * - favicon.ico, public files (.svg, .png, etc.)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.svg$).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|mockServiceWorker\\.js|.*\\.svg$).*)',
   ],
 };

@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import Cookies from 'js-cookie';
 
 // Cliente axios configurado
 export const api = axios.create({
@@ -10,7 +11,7 @@ export const api = axios.create({
 
 // Interceptor para agregar el token a todas las peticiones
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
+   const token = Cookies.get('auth-token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,7 +24,7 @@ api.interceptors.response.use(
     (error: AxiosError) => {
         // Si es 401, redirigir a login
         if (error.response?.status === 401) {
-            localStorage.removeItem('token');
+            Cookies.remove('auth-token');
             window.location.href = '/login';
         }
         return Promise.reject(error);
