@@ -12,9 +12,8 @@ interface User {
 // Tipos para el estado del store
 interface AuthState {
   user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
-  login: (user: User, token: string) => void;
+  login: (user: User) => void;
   logout: () => void;
 }
 
@@ -33,33 +32,10 @@ const initialState = {
  * - Persiste el estado en localStorage usando el middleware 'persist'
  * - No requiere Provider (a diferencia de Redux/Context API)
  */
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      ...initialState,
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  isAuthenticated: false,
 
-      /**
-       * Acción de login
-       * Guarda el usuario, token y marca como autenticado
-       */
-      login: (user: User, token: string) => {
-        set({
-          user,
-          token,
-          isAuthenticated: true,
-        });
-      },
-
-      /**
-       * Acción de logout
-       * Limpia todo el estado de autenticación
-       */
-      logout: () => {
-        set(initialState);
-      },
-    }),
-    {
-      name: 'auth-storage', // Nombre de la key en localStorage
-    }
-  )
-);
+  login: (user) => set({ user, isAuthenticated: true }),
+  logout: () => set({ user: null, isAuthenticated: false }),
+}));

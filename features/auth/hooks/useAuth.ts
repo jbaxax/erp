@@ -24,7 +24,7 @@ export function useLogin() {
     
     onSuccess: (data) => {
       // data ya viene desestructurado del service (data.user, data.token)
-      loginStore(data.user, data.token);
+      loginStore(data.user);
 
       // Invalidar queries relacionadas para que se recarguen
       queryClient.invalidateQueries({ queryKey: authKeys.me() });
@@ -60,74 +60,17 @@ export function useLogout() {
 // Hook: useMe - Query para obtener usuario actual
 // ============================================
 export function useMe() {
-  const { isAuthenticated, token } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
 
   return useQuery({
     queryKey: authKeys.me(),
     queryFn: () => authService.me(),
     
     // Solo ejecutar si el usuario está autenticado
-    enabled: isAuthenticated && !!token,
+    enabled: isAuthenticated,
     
     // Configuración específica para este query
     staleTime: 5 * 60 * 1000, // 5 minutos
     retry: false, // No reintentar si falla (probablemente token inválido)
   });
 }
-
-// ============================================
-// EJEMPLO DE USO EN COMPONENTES
-// ============================================
-
-/*
-// En tu componente de Login:
-export function LoginForm() {
-  const loginMutation = useLogin();
-  
-  const handleSubmit = (email: string, password: string) => {
-    loginMutation.mutate(
-      { email, password },
-      {
-        onSuccess: () => {
-          router.push('/dashboard');
-        },
-        onError: (error) => {
-          toast.error(error.message);
-        }
-      }
-    );
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      {loginMutation.isPending && <Loading />}
-      {loginMutation.isError && <Error message={loginMutation.error.message} />}
-      // ... resto del formulario
-    </form>
-  );
-}
-
-// En tu componente de Profile:
-export function UserProfile() {
-  const { data: user, isLoading, isError } = useMe();
-
-  if (isLoading) return <Loading />;
-  if (isError) return <Error />;
-  
-  return <div>Bienvenido {user.name}</div>;
-}
-
-// Para hacer logout:
-export function LogoutButton() {
-  const logoutMutation = useLogout();
-  
-  return (
-    <button 
-      onClick={() => logoutMutation.mutate()}
-      disabled={logoutMutation.isPending}
-    >
-      {logoutMutation.isPending ? 'Cerrando sesión...' : 'Cerrar sesión'}
-    </button>
-  );
-}
-*/
