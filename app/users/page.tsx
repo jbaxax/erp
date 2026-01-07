@@ -4,11 +4,8 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-/**
- * Página de ejemplo para módulo de Usuarios
- * Solo visible para admin y manager
- */
-export default function UsuariosPage() {
+
+export default function UsersPage() {
   const { user, isAuthenticated } = useAuthStore();
   const router = useRouter();
 

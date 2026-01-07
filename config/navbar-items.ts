@@ -39,43 +39,43 @@ export const navbarItems: NavItem[] = [
     requiredRoles: [], // Todos los usuarios autenticados
   },
   {
-    label: 'Usuarios',
+    label: 'Users',
     icon: Users,
-    href: '/usuarios',
+    href: '/users',
     requiredRoles: ['admin', 'manager'], // Solo admin y manager
   },
   {
-    label: 'Inventario',
+    label: 'Inventory',
     icon: Package,
-    href: '/inventario',
+    href: '/inventory',
     requiredRoles: ['admin', 'manager', 'warehouse'], // Admin, manager y warehouse
   },
   {
-    label: 'Ventas',
+    label: 'Sales',
     icon: ShoppingCart,
-    href: '/ventas',
+    href: '/sales',
     requiredRoles: ['admin', 'sales', 'manager'], // Admin, sales y manager
   },
   {
-    label: 'Reportes',
+    label: 'Reports',
     icon: BarChart3,
-    href: '/reportes',
+    href: '/reports',
     requiredRoles: ['admin', 'manager'], // Solo admin y manager
   },
   {
-    label: 'Facturación',
+    label: 'Billing',
     icon: FileText,
-    href: '/facturacion',
+    href: '/billing',
     requiredRoles: ['admin', 'accounting'], // Admin y accounting
   },
   {
-    label: 'Contabilidad',
+    label: 'Accounting',
     icon: Wallet,
-    href: '/contabilidad',
+    href: '/accounting',
     requiredRoles: ['admin', 'accounting'], // Admin y accounting
   },
   {
-    label: 'Configuración',
+    label: 'Configuration',
     icon: Settings,
     href: '/configuracion',
     requiredRoles: ['admin'], // Solo admin
