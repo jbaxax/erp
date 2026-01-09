@@ -22,7 +22,7 @@ export default function UsersPage() {
     );
 
     if (!hasPermission) {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, [isAuthenticated, user, router]);
 
@@ -33,20 +33,20 @@ export default function UsersPage() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Gestión de Usuarios</h1>
+        <h1 className="text-3xl font-bold">User Management</h1>
         <p className="text-muted-foreground">
-          Administra los usuarios del sistema
+          Manage system users
         </p>
       </div>
 
       <div className="rounded-lg border bg-card p-6">
         <p className="text-sm text-muted-foreground">
-          Esta página solo es visible para usuarios con rol <strong>admin</strong> o <strong>manager</strong>.
+          This page is only visible to users with <strong>admin</strong> or <strong>manager</strong> roles.
         </p>
         
         <div className="mt-4">
           <p className="text-sm">
-            <strong>Usuario actual:</strong> {user?.name}
+            <strong>Current User:</strong> {user?.name}
           </p>
           <p className="text-sm">
             <strong>Roles:</strong> {user?.roles.join(', ')}

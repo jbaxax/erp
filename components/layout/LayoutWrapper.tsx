@@ -11,19 +11,19 @@ interface LayoutWrapperProps {
 /**
  * Layout Wrapper
  * 
- * Decide si mostrar el Sidebar basándose en:
- * - Si el usuario está autenticado
- * - Si no está en rutas públicas (como /login)
+ * Decides whether to show the Sidebar based on:
+ * - If the user is authenticated
+ * - If not on public routes (like /login or landing page)
  */
 export function LayoutWrapper({ children }: LayoutWrapperProps) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const pathname = usePathname();
 
-  // Rutas donde NO queremos mostrar el Sidebar
-  const publicRoutes = ['/login', '/register', '/forgot-password'];
+  // Routes where we DON'T want to show the Sidebar
+  const publicRoutes = ['/', '/login', '/register', '/forgot-password'];
   const isPublicRoute = publicRoutes.includes(pathname);
 
-  // Mostrar Sidebar solo si está autenticado y NO está en ruta pública
+  // Show Sidebar only if authenticated and NOT on a public route
   const showSidebar = isAuthenticated && !isPublicRoute;
 
   return (

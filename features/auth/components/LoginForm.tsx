@@ -33,7 +33,7 @@ export function LoginForm({
       { email, password },
       {
         onSuccess: () => {
-          // Redirigir al dashboard tras login exitoso
+          // Redirect to dashboard after successful login
           router.push('/dashboard');
         },
         onError: (error: Error) => {

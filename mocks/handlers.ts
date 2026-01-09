@@ -1,9 +1,9 @@
 import { http, HttpResponse } from 'msw';
 
-// Base URL de tu API simulada
+// Simulated API Base URL
 const API_URL = 'http://localhost:3000/api';
 
-// Base de datos simulada (puedes moverla a un archivo separado)
+// Simulated database (could be moved to a separate file)
 const MOCK_USERS = [
   {
     id: '1',
@@ -16,12 +16,12 @@ const MOCK_USERS = [
     id: '2',
     email: 'vendedor@erp.com',
     password: 'sales',
-    name: 'Vendedor Juan',
+    name: 'Sales Rep John',
     roles: ['sales']
   }
 ];
 
-// Handlers para cada endpoint de tu API
+// Handlers for each API endpoint
 export const handlers = [
   // POST /api/auth/login
   http.post(`${API_URL}/auth/login`, async ({ request }) => {
@@ -37,17 +37,17 @@ export const handlers = [
 
     if (!user) {
       return HttpResponse.json(
-        { 
-          message: 'Credenciales inválidas',
+        {
+          message: 'Invalid credentials',
           errors: {
-            email: 'Email o contraseña incorrectos'
+            email: 'Incorrect email or password'
           }
         },
         { status: 401 }
       );
     }
 
-    // Respuesta exitosa con formato de API REST profesional
+    // Successful response with professional REST API format
     return HttpResponse.json({
       success: true,
       data: {
@@ -65,27 +65,27 @@ export const handlers = [
   // POST /api/auth/logout
   http.post(`${API_URL}/auth/logout`, async () => {
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     return HttpResponse.json({
       success: true,
-      message: 'Sesión cerrada exitosamente'
+      message: 'Logged out successfully'
     });
   }),
 
-  // GET /api/auth/me - Para verificar el usuario actual
+  // GET /api/auth/me - Verify current user
   http.get(`${API_URL}/auth/me`, async ({ request }) => {
     const authHeader = request.headers.get('Authorization');
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return HttpResponse.json(
-        { message: 'No autorizado' },
+        { message: 'Unauthorized' },
         { status: 401 }
       );
     }
 
     // Simulamos validación del token
     const token = authHeader.substring(7);
-    
+
     // En un escenario real, aquí validarías el JWT
     // Por ahora, retornamos el primer usuario (admin)
     const user = MOCK_USERS[0];

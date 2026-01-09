@@ -11,8 +11,17 @@ import {
 } from 'lucide-react';
 
 /**
- * Tipo para un item de navegación
+ * Navigation Item Configuration
+ * 
+ * Each item defines:
+ * - label: Visible menu text
+ * - icon: Lucide icon
+ * - href: Next.js route
+ * - requiredRoles: Array of roles that can see this item
+ * 
+ * If requiredRoles is empty [], all authenticated users can see it
  */
+
 export interface NavItem {
   label: string;
   icon: LucideIcon;
@@ -20,23 +29,12 @@ export interface NavItem {
   requiredRoles: string[];
 }
 
-/**
- * Configuración de items del Sidebar
- * 
- * Cada item define:
- * - label: Texto visible del menú
- * - icon: Ícono de lucide-react
- * - href: Ruta de Next.js
- * - requiredRoles: Array de roles que pueden ver este item
- * 
- * Si requiredRoles está vacío [], todos los usuarios autenticados pueden verlo
- */
 export const navbarItems: NavItem[] = [
   {
     label: 'Dashboard',
     icon: LayoutDashboard,
-    href: '/',
-    requiredRoles: [], // Todos los usuarios autenticados
+    href: '/dashboard',
+    requiredRoles: [], // All authenticated users
   },
   {
     label: 'Users',
@@ -77,25 +75,25 @@ export const navbarItems: NavItem[] = [
   {
     label: 'Configuration',
     icon: Settings,
-    href: '/configuracion',
-    requiredRoles: ['admin'], // Solo admin
+    href: '/settings',
+    requiredRoles: ['admin'], // Only admin
   },
 ];
 
 /**
- * Función helper para filtrar items según los roles del usuario
+ * Helper function to filter items based on user roles
  * 
- * @param userRoles - Array de roles del usuario actual
- * @returns Array de items que el usuario puede ver
+ * @param userRoles - Array of roles for the current user
+ * @returns Array of items the user can see
  */
 export function getFilteredNavItems(userRoles: string[]): NavItem[] {
   return navbarItems.filter((item) => {
-    // Si no requiere roles específicos, todos pueden verlo
+    // If no specific roles required, everyone can see it
     if (item.requiredRoles.length === 0) {
       return true;
     }
-    
-    // Verificar si el usuario tiene al menos uno de los roles requeridos
+
+    // Check if user has at least one of the required roles
     return item.requiredRoles.some((requiredRole) =>
       userRoles.includes(requiredRole)
     );

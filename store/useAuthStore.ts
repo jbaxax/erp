@@ -32,10 +32,17 @@ const initialState = {
  * - Persiste el estado en localStorage usando el middleware 'persist'
  * - No requiere Provider (a diferencia de Redux/Context API)
  */
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  isAuthenticated: false,
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
 
-  login: (user) => set({ user, isAuthenticated: true }),
-  logout: () => set({ user: null, isAuthenticated: false }),
-}));
+      login: (user) => set({ user, isAuthenticated: true }),
+      logout: () => set({ user: null, isAuthenticated: false }),
+    }),
+    {
+      name: 'auth-storage', // key name in localStorage
+    }
+  )
+);
