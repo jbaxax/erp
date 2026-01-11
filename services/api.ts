@@ -11,7 +11,7 @@ export const api = axios.create({
 
 // Interceptor para agregar el token a todas las peticiones
 api.interceptors.request.use((config) => {
-   const token = Cookies.get('auth-token');
+    const token = Cookies.get('auth-token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -22,8 +22,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
-        // Si es 401, redirigir a login
-        if (error.response?.status === 401) {
+        // Ignorar 401 si viene del endpoint de login (para manejar credenciales incorrectas localmente)
+        const isLoginRequest = error.config?.url?.includes('/auth/login');
+
+        // Si es 401 y NO es login, redirigir
+        if (error.response?.status === 401 && !isLoginRequest) {
             Cookies.remove('auth-token');
             window.location.href = '/login';
         }
