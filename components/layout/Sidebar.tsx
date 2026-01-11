@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { getFilteredNavItems } from '@/config/navbar-items';
 import { Separator } from '@/components/ui/separator';
 import { LogOut, User } from 'lucide-react';
+import { useLogout } from '@/features/auth/hooks/useAuth';
 
 /**
  * Sidebar Component
@@ -19,10 +20,15 @@ import { LogOut, User } from 'lucide-react';
  */
 export function Sidebar() {
   const pathname = usePathname();
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
+  const logoutMutation = useLogout();
 
   // Obtener items filtrados según los roles del usuario
   const filteredItems = getFilteredNavItems(user?.roles || []);
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
 
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r bg-background">
@@ -45,7 +51,7 @@ export function Sidebar() {
               </p>
             </div>
           </div>
-          
+
           {/* Roles del usuario */}
           <div className="mt-2 flex flex-wrap gap-1">
             {user?.roles.map((role) => (
@@ -90,11 +96,12 @@ export function Sidebar() {
         <div className="border-t p-4">
           <Separator className="mb-4" />
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-destructive hover:text-destructive-foreground"
+            disabled={logoutMutation.isPending}
           >
             <LogOut className="h-5 w-5" />
-            <span>Cerrar sesión</span>
+            <span>{logoutMutation.isPending ? 'Cerrando sesión...' : 'Cerrar sesión'}</span>
           </button>
         </div>
       </div>

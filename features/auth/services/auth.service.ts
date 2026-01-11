@@ -22,13 +22,14 @@ export async function login(payload: LoginPayload): Promise<{ user: User; token:
 export async function logout(): Promise<void> {
   try {
     await api.post('/auth/logout');
+  } catch (error) {
+    console.error('Logout failed:', error);
+  } finally {
     Cookies.remove('auth-token', {
       path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict'
     });
-  } catch (error) {
-    handleApiError(error);
   }
 }
 

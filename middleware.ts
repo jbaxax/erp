@@ -26,7 +26,15 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  // Add headers to prevent caching for all routes handled by middleware
+  // This ensures that using the "Back" button after logout doesn't show sensitive data from cache
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  response.headers.set('Pragma', 'no-cache');
+  response.headers.set('Expires', '0');
+
+  return response;
 }
 
 // Configure which routes should execute the middleware

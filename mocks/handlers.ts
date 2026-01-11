@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw';
 
 // Simulated API Base URL
-const API_URL = 'http://localhost:3000/api';
+// Simulated API Base URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Simulated database (could be moved to a separate file)
 const MOCK_USERS = [
